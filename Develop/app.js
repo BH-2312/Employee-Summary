@@ -24,35 +24,102 @@ const render = require("./lib/htmlRenderer");
 // Hint: you may need to check if the `output` folder exists and create it if it
 // does not.
 
-const managerQuestion = [
-{
-    type: "number",
-    message: "What is your office manager number?",
-    name: "officeNumber",
-   
-  }]
-  const generalQuestions = [
-    {
-      type: "input",
-      message: "What is your name?",
-      name: "name",
-     
-    },
-    {
-      type: "number",
-      message: "What is your id?",
-      name: "id",
-     
-    },
-    {
-      type: "input",
-      message: "What is your email?",
-      name: "email",
-     
-    }
+const managerQuestions = [
+  {
+    type: "input",
+    message: "What is your name?",
+    name: "name",
 
+  },
+  {
+    type: "input",
+    message: "What is your id?",
+    name: "id",
+
+  },
+  {
+    type: "input",
+    message: "What is your email?",
+    name: "email",
+
+  },
+  {
+    type: "input",
+    message: "What is your office number?",
+    name: "officeNumber",
+
+  }
+
+];
+
+const internQuestions = [
+  
+  {
+    type: "input",
+    message: "What is the intern's name?",
+    name: "name",
+
+  },
+  {
+    type: "input",
+    message: "What is the intern's id?",
+    name: "id",
+
+  },
+  {
+    type: "input",
+    message: "What is the intern's email?",
+    name: "email",
+
+  },
+  {
+    type: "input",
+    message: "What school did the intern attend?",
+    name: "school",
+
+  }
+];
+
+const engineerQuestions = [
+ 
+  {
+    type: "input",
+    message: "What is the engineer's name?",
+    name: "name",
+
+  },
+  {
+    type: "input",
+    message: "What is the engineer's id?",
+    name: "id",
+
+  },
+  {
+    type: "input",
+    message: "What is the engineer's email?",
+    name: "email",
+
+  },
+  {
+    type: "input",
+    message: "What is the engineer's github?",
+    name: "github",
+
+  },
+];
+
+const teamQuestion = {
+  type: "list",
+  message: "What sort of employee are you adding?",
+  name: "job",
+  choices: [
+    "Engineer",
+    "Intern",
+    "No more employees"
   ]
- var employees = [];
+};
+
+var employees = [];
 
 // HINT: each employee type (manager, engineer, or intern) has slightly different
 // information; write your code to ask different questions via inquirer depending on
@@ -65,9 +132,59 @@ const managerQuestion = [
 // for the provided `render` function to work! ```
 
 function init() {
-    inquirer.prompt([...generalQuestions, managerQuestion])
-      .then(function ({name, id, email, officeNumber}) {
-        const manager = new Manager (name, id, email, officeNumber);
-        employees.push(manager);
-      });
-    }
+  inquirer.prompt(managerQuestions)
+    .then(function ({ name, id, email, officeNumber }) {
+      const manager = new Manager(name, id, email, officeNumber);
+      employees.push(manager);
+      console.log(employees);
+      createTeam();
+    });
+}
+init();
+
+function createTeam() {
+  inquirer.prompt(teamQuestion)
+    .then(function ({ job }) {
+      if (job === "Engineer") {
+        createEngineer();
+      }
+      else if (job === "Intern") {
+        createIntern();
+      }
+      else if (job === "No more employees") {
+        finishTeam();
+      }
+    })
+};
+
+
+function createEngineer() {
+  inquirer.prompt(engineerQuestions).then(function ({ name, id, email, github }) {
+      const engineer = new Engineer(name, id, email, github);
+
+      employees.push(engineer);
+
+      createTeam();
+  })
+}
+
+function createIntern() {
+  inquirer.prompt(internQuestions).then(function ({ name, id, email, school }) {
+    const intern = new Intern(name, id, email, school);
+
+    employees.push(intern);
+
+    createTeam();
+})
+
+}
+function finishTeam() {
+  const htmlData = render(employees);
+
+  fs.writeFile(outputPath, (htmlData), (err) => {
+      if (err) throw err;
+      console.log(" output/team.html to see your file!");
+
+  })
+
+}
