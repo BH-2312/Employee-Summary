@@ -10,6 +10,8 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+//Questions to ask the manager about their employment//
+
 const managerQuestions = [
   {
     type: "input",
@@ -37,6 +39,8 @@ const managerQuestions = [
   }
 
 ];
+
+//Questions to ask the manager regarding the intern//
 
 const internQuestions = [
   
@@ -66,6 +70,8 @@ const internQuestions = [
   }
 ];
 
+//Questions to ask the manager regarding the engineer//
+
 const engineerQuestions = [
  
   {
@@ -94,6 +100,8 @@ const engineerQuestions = [
   },
 ];
 
+//Question to ask the manager regarding the type of employee they are asking//
+
 const teamQuestion = {
   type: "list",
   message: "What sort of employee are you adding?",
@@ -105,7 +113,11 @@ const teamQuestion = {
   ]
 };
 
+//Array to hold employees as they are added//
+
 var employees = [];
+
+//function to prompt the manager with questions//
 
 function init() {
   inquirer.prompt(managerQuestions)
@@ -117,6 +129,8 @@ function init() {
     });
 }
 init();
+
+//function to create team and then ask appropriate questions based upon employee type//
 
 function createTeam() {
   inquirer.prompt(teamQuestion)
